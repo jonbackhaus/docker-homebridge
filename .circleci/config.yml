@@ -6,7 +6,7 @@ executors:
       IMAGE_NAME: homebridge
       IMAGE_URI: $ORG_NAME/$IMAGE_NAME
     docker:
-      - image: buildpack-deps:trusty
+      - image: cimg/base:2020.01
         auth:
           username: $DOCKERHUB_USERNAME
           password: $DOCKERHUB_TOKEN
