@@ -27,7 +27,6 @@ jobs:
             docker tag $IMAGE_URI $IMAGE_URI:$CIRCLE_BRANCH
             docker push $IMAGE_URI:latest
             docker push $IMAGE_URI:$COMMIT_SLUG
-            docker push $IMAGE_URI:$IMAGE_DATE
             docker push $IMAGE_URI:$CIRCLE_BRANCH
 
 
