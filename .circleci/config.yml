@@ -32,8 +32,21 @@ jobs:
 
 workflows:
   version: 2
-  workflow-any:
+  workflow-commit:
     jobs:
       - job-build-image:
-          context:
-            - default
+          context: default
+          filters: 
+            branches:
+              only: main
+
+  workflow-nightly:
+    jobs:
+      - job-build-image:
+          context: default
+          filters:
+            branches:
+              only: main
+    triggers:
+      - schedule:
+          cron: "0 3 * * *"
