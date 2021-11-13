@@ -6,9 +6,6 @@ executors:
       IMAGE_NAME: homebridge
     docker:
       - image: cimg/base:2020.01
-        auth:
-          username: $DOCKERHUB_USERNAME
-          password: $DOCKERHUB_TOKEN
 
 
 jobs:
