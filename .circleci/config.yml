@@ -35,4 +35,6 @@ workflows:
   version: 2
   workflow-any:
     jobs:
-      - job-build-image
+      - job-build-image:
+          context:
+            - default
