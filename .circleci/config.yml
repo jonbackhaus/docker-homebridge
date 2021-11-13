@@ -21,7 +21,7 @@ jobs:
       - run:
           name: build image
           command: |
-            # echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             export IMAGE_URI=$ORG_NAME/$IMAGE_NAME
             docker build -t $IMAGE_URI -f Dockerfile .
             COMMIT_SLUG=${CIRCLE_SHA1:0:7}; echo "COMMIT_SLUG=$COMMIT_SLUG"
