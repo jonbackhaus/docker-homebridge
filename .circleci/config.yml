@@ -23,7 +23,7 @@ jobs:
           command: |
             # echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             export IMAGE_URI=$ORG_NAME/$IMAGE_NAME
-            docker build -t $IMAGE_URI -f Dockerfile $IMAGE_NAME
+            docker build -t $IMAGE_URI -f Dockerfile .
             COMMIT_SLUG=${CIRCLE_SHA1:0:7}; echo "COMMIT_SLUG=$COMMIT_SLUG"
             docker tag $IMAGE_URI $IMAGE_URI:latest
             docker tag $IMAGE_URI $IMAGE_URI:$COMMIT_SLUG
