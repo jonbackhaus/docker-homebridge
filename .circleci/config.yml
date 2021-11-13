@@ -4,7 +4,6 @@ executors:
     environment:
       ORG_NAME: jonbackhaus
       IMAGE_NAME: homebridge
-      IMAGE_URI: $ORG_NAME/$IMAGE_NAME
     docker:
       - image: cimg/base:2020.01
         auth:
@@ -17,6 +16,10 @@ jobs:
     executor: docker-publisher
     steps:
       - checkout
+      - run:
+          name: configure environment
+          command: |
+            export IMAGE_URI=$ORG_NAME/$IMAGE_NAME
       - run:
           name: Build Docker image
           command: |
@@ -35,6 +38,10 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - setup_remote_docker
+      - run:
+          name: configure environment
+          command: |
+            export IMAGE_URI=$ORG_NAME/$IMAGE_NAME
       - run:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
@@ -57,6 +64,10 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - setup_remote_docker
+      - run:
+          name: configure environment
+          command: |
+            export IMAGE_URI=$ORG_NAME/$IMAGE_NAME
       - run:
           name: Load archived Docker image
           command: docker load -i /tmp/workspace/image.tar
