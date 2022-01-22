@@ -69,11 +69,11 @@ workflows:
     jobs:
       - job-build-image:
           from_tag: "2022-01-11"
-          context: default
           filters: 
             branches:
               only: main
       - job-push-image:
+          context: default
           requires:
             - "job-build-image"
           matrix:
@@ -94,8 +94,8 @@ workflows:
     jobs:
       - job-build-image:
           from_tag: "2022-01-11"
-          context: default
       - job-push-image:
+          context: default
           requires:
             - "job-build-image"
           matrix:
