@@ -1,14 +1,6 @@
 version: 2.1
-parameters:
-  upstream_tag:
-    description: "tag of upstream image (used to populate FROM in Dockerfile via build arg)"
-    default: "latest"
-    type: string
-
-
 executors:
   executor-docker:
-    upstream_tag: "2022-01-11"  
     environment:
       ORG_NAME: jonbackhaus
       IMAGE_NAME: homebridge
@@ -76,7 +68,7 @@ workflows:
   workflow-commit:
     jobs:
       - job-build-image:
-          from_tag: "<< parameters.upstream_tag >>"
+          from_tag: "2022-01-11"
           context: default
           filters: 
             branches:
@@ -101,7 +93,7 @@ workflows:
               only: main
     jobs:
       - job-build-image:
-          from_tag: "<< parameters.upstream_tag >>"
+          from_tag: "2022-01-11"
           context: default
       - job-push-image:
           requires:
