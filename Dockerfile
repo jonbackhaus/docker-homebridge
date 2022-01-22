@@ -1,4 +1,5 @@
-FROM oznu/homebridge:latest
+ARG FROM_TAG=latest
+FROM oznu/homebridge:${FROM_TAG}
 
 # Nest Cam
 RUN npm install -g --unsafe-perm homebridge-nest-cam 
