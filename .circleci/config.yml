@@ -42,6 +42,7 @@ jobs:
 
   job-push-image:
     description: push image to repo
+    parallelism: 1
     parameters:
       image_tag:
         description: tag for Docker image
