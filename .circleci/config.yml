@@ -2,6 +2,7 @@ version: 2.1
 executors:
   executor-docker:
     environment:
+      FROM_TAG: "2022-01-11"
       ORG_NAME: jonbackhaus
       IMAGE_NAME: homebridge
     docker:
@@ -12,10 +13,6 @@ jobs:
   job-build-image:
     description: generic Docker image builder
     parameters:
-      from_tag:
-        description: Docker build argument for source image (FROM) tag
-        default: "latest"
-        type: string
       dockerfile:
         description: filename for Docker build file (Dockerfile)
         default: "Dockerfile"
@@ -33,7 +30,7 @@ jobs:
           name: build image
           command: |
             IMAGE_URI=$ORG_NAME/$IMAGE_NAME; echo "IMAGE_URI=$IMAGE_URI"
-            docker build --build-arg FROM_TAG=<< parameters.from_tag >> -t $IMAGE_URI -f << parameters.dockerfile >> << parameters.build_context >>
+            docker build --build-arg FROM_TAG=$FROM_TAG -t $IMAGE_URI -f << parameters.dockerfile >> << parameters.build_context >>
             docker save -o image.tar $IMAGE_URI
       - persist_to_workspace:
           root: .
@@ -69,7 +66,6 @@ workflows:
   workflow-commit:
     jobs:
       - job-build-image:
-          from_tag: "2022-01-11"
           filters: 
             branches:
               only: main
@@ -93,8 +89,7 @@ workflows:
             branches:
               only: main
     jobs:
-      - job-build-image:
-          from_tag: "2022-01-11"
+      - job-build-image
       - job-push-image:
           context: default
           requires:
