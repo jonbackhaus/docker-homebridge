@@ -68,7 +68,9 @@ workflows:
       - job-build-image:
           filters: 
             branches:
-              only: main
+              only:
+                - main
+                - master
       - job-push-image:
           context: default
           requires:
@@ -80,6 +82,24 @@ workflows:
                 - "<< pipeline.git.branch >>"
                 - "<< pipeline.git.branch >>-<< pipeline.git.revision >>"
                 - "<< pipeline.git.branch >>-<< pipeline.git.revision >>-<< pipeline.number >>"
+
+  workflow-release:
+    jobs:
+      - job-build-image:
+          filters: 
+            tags:
+              only: /.*/ # build all tags
+      - job-push-image:
+          context: default
+          requires:
+            - "job-build-image"
+          matrix:
+            parameters:
+              image_tag:
+                - "release"
+                - "<< pipeline.git.tag >>"
+                - "<< pipeline.git.tag >>-<< pipeline.git.revision >>"
+                - "<< pipeline.git.tag >>-<< pipeline.git.revision >>-<< pipeline.number >>"
 
   workflow-nightly:
     triggers:
@@ -98,6 +118,7 @@ workflows:
             parameters:
               image_tag:
                 - "latest"
+                - "nightly"
                 - "<< pipeline.git.branch >>"
                 - "<< pipeline.git.branch >>-<< pipeline.git.revision >>"
                 - "<< pipeline.git.branch >>-<< pipeline.git.revision >>-<< pipeline.number >>"
