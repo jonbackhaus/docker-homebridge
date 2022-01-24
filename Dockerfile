@@ -10,8 +10,8 @@ RUN npm install -g --unsafe-perm homebridge-tplink-smarthome
 # MyQ
 RUN npm install -g --unsafe-perm homebridge-myq 
 
-# UniFi Protect
-RUN npm install -g --unsafe-perm homebridge-unifi-protect 
+# UniFi Protect with Camera Motion
+RUN npm install -g --unsafe-perm homebridge-unifi-protect-camera-motion
 
 # Meross
 RUN npm install -g --unsafe-perm homebridge-meross
