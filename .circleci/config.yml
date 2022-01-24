@@ -68,9 +68,7 @@ workflows:
       - job-build-image:
           filters: 
             branches:
-              only:
-                - main
-                - master
+              only: main
       - job-push-image:
           context: default
           requires:
