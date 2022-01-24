@@ -15,3 +15,6 @@ RUN npm install -g --unsafe-perm homebridge-unifi-protect
 
 # Meross
 RUN npm install -g --unsafe-perm homebridge-meross
+
+# Logitech Harmony
+RUN npm install -g --unsafe-perm homebridge-harmony
