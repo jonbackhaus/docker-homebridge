@@ -89,10 +89,17 @@ workflows:
           filters: 
             tags:
               only: /.*/ # build all tags
+            branches:
+              ignore: /.*/ # ignore all branches
       - job-push-image:
           context: default
           requires:
             - "job-build-image"
+          filters: 
+            tags:
+              only: /.*/ # build all tags
+            branches:
+              ignore: /.*/ # ignore all branches
           matrix:
             parameters:
               image_tag:
