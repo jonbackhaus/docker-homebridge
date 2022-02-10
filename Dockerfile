@@ -18,3 +18,6 @@ RUN npm install -g --unsafe-perm homebridge-meross
 
 # Hubitat
 RUN npm install -g --unsafe-perm homebridge-hubitat
+
+# Alexa
+RUN npm install -g --unsafe-perm homebridge-alexa
