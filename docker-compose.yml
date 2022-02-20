@@ -1,0 +1,43 @@
+version: '3.7'
+services:
+  homebridge:
+    # image: jonbackhaus/homebridge:homebridge-hubitat
+    image: oznu/homebridge:2022-01-20
+    container_name: homebridge
+    environment:
+      - TZ=America/New_York
+      - HOMEBRIDGE_CONFIG_UI=1
+      - HOMEBRIDGE_CONFIG_UI_PORT=8581
+      # - PGID=1000
+      # - PUID=1000
+    # network_mode: host
+    networks:
+      - homebridge
+    # ports:
+    #   - target: 8581
+    #     published: 8581
+    #     protocol: tcp
+    #     mode: host
+    #   - target: 52536
+    #     published: 52536
+    #     protocol: tcp
+    #     mode: host
+    # volumes:
+    #   - ./config:/homebridge
+  netshoot:
+    image: nicolaka/netshoot
+    tty: true
+    container_name: netshoot
+    # network_mode: host
+    networks:
+      - homebridge
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - homebridge
+
+
+networks:
+  homebridge:
+    driver: bridge
+    name: homebridge
