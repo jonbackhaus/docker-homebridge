@@ -2,7 +2,7 @@ version: '3.7'
 services:
   homebridge:
     # image: jonbackhaus/homebridge:homebridge-hubitat
-    image: oznu/homebridge:2022-01-20
+    image: oznu/homebridge:2022-02-09
     container_name: homebridge
     environment:
       - TZ=America/New_York
