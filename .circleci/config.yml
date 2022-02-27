@@ -65,7 +65,7 @@ jobs:
 
 workflows:
   version: 2
-  workflow-mainline:
+  workflow-push-mainline:
     jobs:
       - job-build-image:
           filters: 
@@ -80,7 +80,7 @@ workflows:
               image_tag:
                 - "latest"
 
-  workflow-branch:
+  workflow-push-branch:
     jobs:
       - job-build-image:
           filters: 
@@ -97,7 +97,7 @@ workflows:
                 - "<< pipeline.git.branch >>-<< pipeline.git.revision >>"
                 - "<< pipeline.git.branch >>-<< pipeline.git.revision >>-<< pipeline.number >>"
 
-  workflow-release:
+  workflow-tag-release:
     jobs:
       - job-build-image:
           filters: 
@@ -122,7 +122,7 @@ workflows:
                 - "<< pipeline.git.tag >>-<< pipeline.git.revision >>"
                 - "<< pipeline.git.tag >>-<< pipeline.git.revision >>-<< pipeline.number >>"
 
-  workflow-nightly:
+  workflow-cron-nightly:
     triggers:
       - schedule:
           cron: "0 3 * * *"
@@ -138,7 +138,6 @@ workflows:
           matrix:
             parameters:
               image_tag:
-                - "latest"
                 - "nightly"
                 - "<< pipeline.git.branch >>"
                 - "<< pipeline.git.branch >>-<< pipeline.git.revision >>"
