@@ -29,6 +29,7 @@ jobs:
       - run:
           name: build image
           command: |
+            set -eux
             IMAGE_URI=$ORG_NAME/$IMAGE_NAME; echo "IMAGE_URI=$IMAGE_URI"
             docker build --build-arg FROM_TAG=$FROM_TAG -t $IMAGE_URI -f << parameters.dockerfile >> << parameters.build_context >>
             docker save -o image.tar $IMAGE_URI
@@ -54,6 +55,7 @@ jobs:
       - run:
           name: push image
           command: |
+            set -eux
             IMAGE_URI=$ORG_NAME/$IMAGE_NAME; echo "IMAGE_URI=$IMAGE_URI"
             echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             docker load -i image.tar
