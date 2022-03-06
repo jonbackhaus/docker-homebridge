@@ -81,7 +81,7 @@ jobs:
           command: |
             set -eux
             docker load -i image.tar
-            docker compose up -d
+            docker compose -f docker-compose.yml up -d
             sleep 10
             docker exec -t \
               netshoot \
