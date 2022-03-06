@@ -18,3 +18,6 @@ RUN npm install -g --unsafe-perm homebridge-meross
 
 # Hubitat
 RUN npm install -g --unsafe-perm homebridge-hubitat
+
+# Homebridge Delay Switch
+RUN npm install -g --unsafe-perm homebridge-delay-switch
