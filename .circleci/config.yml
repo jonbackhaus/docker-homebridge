@@ -118,7 +118,7 @@ workflows:
       - job-build-image:
           filters: 
             branches:
-              except: main
+              ignore: main
       - job-test-image:
           requires:
             - "job-build-image"
