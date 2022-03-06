@@ -62,6 +62,42 @@ jobs:
             docker tag $IMAGE_URI $IMAGE_URI:<< parameters.image_tag >>
             docker push $IMAGE_URI:<< parameters.image_tag >>
    
+  job-test-image:
+    description: test image
+    parallelism: 1
+    parameters:
+      image_tag:
+        description: tag for Docker image
+        default: "latest"
+        type: string
+    executor: executor-docker
+    steps:
+      - setup_remote_docker:
+          version: 19.03.13
+      - attach_workspace:
+          at: .
+      - run:
+          name: test image
+          command: |
+            set -eux
+            IMAGE_URI=$ORG_NAME/$IMAGE_NAME; echo "IMAGE_URI=$IMAGE_URI"
+            docker load -i image.tar
+            docker run -d --rm \
+              --name homebridge \
+              --network homebridge \
+              -e "TZ=America/New_York" \
+              -e "HOMEBRIDGE_CONFIG_UI=1" \
+              -e "HOMEBRIDGE_CONFIG_UI_PORT=8581" \
+              $IMAGE_URI
+            docker run -dt --rm \
+              --name netshoot \
+              --network homebridge \
+              nicolaka/netshoot:latest
+            sleep 10
+            docker exec -t \
+              netshoot \
+              curl -sSf --retry 3 http://homebridge:8581 > /dev/null
+
 
 workflows:
   version: 2
@@ -71,10 +107,14 @@ workflows:
           filters: 
             branches:
               only: main
+      - job-test-image:
+          requires:
+            - "job-build-image"
       - job-push-image:
           context: default
           requires:
             - "job-build-image"
+            - "job-test-image"
           matrix:
             parameters:
               image_tag:
@@ -86,10 +126,14 @@ workflows:
           filters: 
             branches:
               only: /.*/ # build all branches
+      - job-test-image:
+          requires:
+            - "job-build-image"
       - job-push-image:
           context: default
           requires:
             - "job-build-image"
+            - "job-test-image"
           matrix:
             parameters:
               image_tag:
@@ -105,10 +149,14 @@ workflows:
               only: /.*/ # build all tags
             branches:
               ignore: /.*/ # ignore all branches
+      - job-test-image:
+          requires:
+            - "job-build-image"
       - job-push-image:
           context: default
           requires:
             - "job-build-image"
+            - "job-test-image"
           filters: 
             tags:
               only: /.*/ # build all tags
@@ -131,10 +179,14 @@ workflows:
               only: main
     jobs:
       - job-build-image
+      - job-test-image:
+          requires:
+            - "job-build-image"
       - job-push-image:
           context: default
           requires:
             - "job-build-image"
+            - "job-test-image"
           matrix:
             parameters:
               image_tag:
