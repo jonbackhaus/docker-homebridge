@@ -73,26 +73,15 @@ jobs:
     executor: executor-docker
     steps:
       - setup_remote_docker:
-          version: 19.03.13
+          version: 20.10.11
       - attach_workspace:
           at: .
       - run:
           name: test image
           command: |
             set -eux
-            IMAGE_URI=$ORG_NAME/$IMAGE_NAME; echo "IMAGE_URI=$IMAGE_URI"
             docker load -i image.tar
-            docker run -d --rm \
-              --name homebridge \
-              --network homebridge \
-              -e "TZ=America/New_York" \
-              -e "HOMEBRIDGE_CONFIG_UI=1" \
-              -e "HOMEBRIDGE_CONFIG_UI_PORT=8581" \
-              $IMAGE_URI
-            docker run -dt --rm \
-              --name netshoot \
-              --network homebridge \
-              nicolaka/netshoot:latest
+            docker compose up -d
             sleep 10
             docker exec -t \
               netshoot \
