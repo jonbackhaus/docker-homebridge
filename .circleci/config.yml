@@ -72,6 +72,7 @@ jobs:
         type: string
     executor: executor-docker
     steps:
+      - checkout
       - setup_remote_docker:
           version: 20.10.11
       - attach_workspace:
@@ -81,7 +82,7 @@ jobs:
           command: |
             set -eux
             docker load -i image.tar
-            docker compose -f docker-compose.yml up -d
+            docker compose up -d
             sleep 10
             docker exec -t \
               netshoot \
