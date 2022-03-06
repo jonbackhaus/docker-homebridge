@@ -1,0 +1,26 @@
+version: '3.7'
+services:
+  homebridge:
+    image: jonbackhaus/homebridge
+    container_name: homebridge
+    environment:
+      - TZ=America/New_York
+      - HOMEBRIDGE_CONFIG_UI=1
+      - HOMEBRIDGE_CONFIG_UI_PORT=8581
+    networks:
+      - homebridge
+
+  netshoot:
+    image: nicolaka/netshoot
+    tty: true
+    container_name: netshoot
+    networks:
+      - homebridge
+    depends_on:
+      - homebridge
+
+
+networks:
+  homebridge:
+    driver: bridge
+    name: homebridge
