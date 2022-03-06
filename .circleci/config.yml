@@ -12,6 +12,7 @@ executors:
 jobs:
   job-build-image:
     description: generic Docker image builder
+    parallelism: 1 
     parameters:
       dockerfile:
         description: filename for Docker build file (Dockerfile)
@@ -64,7 +65,6 @@ jobs:
    
   job-test-image:
     description: test image
-    parallelism: 1
     parameters:
       image_tag:
         description: tag for Docker image
@@ -109,13 +109,16 @@ workflows:
             parameters:
               image_tag:
                 - "latest"
+                - "<< pipeline.git.branch >>"
+                - "<< pipeline.git.branch >>-<< pipeline.git.revision >>"
+                - "<< pipeline.git.branch >>-<< pipeline.git.revision >>-<< pipeline.number >>" 
 
   workflow-push-branch:
     jobs:
       - job-build-image:
           filters: 
             branches:
-              only: /.*/ # build all branches
+              except: main
       - job-test-image:
           requires:
             - "job-build-image"
