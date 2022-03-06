@@ -9,14 +9,13 @@ services:
       - HOMEBRIDGE_CONFIG_UI_PORT=8581
     networks:
       - homebridge
+
   netshoot:
     image: nicolaka/netshoot
     tty: true
     container_name: netshoot
     networks:
       - homebridge
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       - homebridge
 
