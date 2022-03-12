@@ -81,12 +81,15 @@ jobs:
           name: test image
           command: |
             set -eux
+            IMAGE_URI=$ORG_NAME/$IMAGE_NAME; echo "IMAGE_URI=$IMAGE_URI"
             docker load -i image.tar
+            docker tag $IMAGE_URI $IMAGE_URI:test
             docker compose up -d
             sleep 10
             docker exec -t \
               netshoot \
-              curl -sSf --retry 3 http://homebridge:8581 > /dev/null
+              curl -sSf --retry 3 http://homebridge:8581 > /dev/null || exit 1
+            docker compose down -v
 
 
 workflows:
