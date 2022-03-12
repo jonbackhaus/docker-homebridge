@@ -10,3 +10,4 @@ Custom build of the oznu/homebridge Docker container image to include the follow
 - homebridge-hubitat
 - homebridge-delay-switch
 - homebridge-alexa
+- homebridge-lgwebos-tv
