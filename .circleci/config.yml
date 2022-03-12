@@ -12,7 +12,6 @@ executors:
 jobs:
   job-build-image:
     description: generic Docker image builder
-    parallelism: 1 
     parameters:
       dockerfile:
         description: filename for Docker build file (Dockerfile)
@@ -27,6 +26,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           version: 20.10.11
+          docker_layer_caching: true
       - run:
           name: build image
           command: |
