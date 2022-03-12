@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   homebridge:
-    image: jonbackhaus/homebridge
+    image: jonbackhaus/homebridge:test
     container_name: homebridge
     environment:
       - TZ=America/New_York
@@ -11,7 +11,7 @@ services:
       - homebridge
 
   netshoot:
-    image: nicolaka/netshoot
+    image: nicolaka/netshoot:latest
     tty: true
     container_name: netshoot
     networks:
