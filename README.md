@@ -8,4 +8,6 @@ Custom build of the oznu/homebridge Docker container image to include the follow
 - homebridge-unifi-protect 
 - homebridge-meross
 - homebridge-hubitat
+- homebridge-delay-switch
+- homebridge-alexa
 - homebridge-lgwebos-tv
