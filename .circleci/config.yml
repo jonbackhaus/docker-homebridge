@@ -89,8 +89,9 @@ jobs:
             docker exec -t \
               netshoot \
               curl -sSf --retry 3 http://homebridge:8581 > /dev/null || exit 1
-            docker compose down -v
-
+            docker container logs homebridge > homebridge.log
+      - store_artifacts:
+          path: homebridge.log
 
 workflows:
   version: 2
