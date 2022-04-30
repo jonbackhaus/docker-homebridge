@@ -86,10 +86,11 @@ jobs:
             docker tag $IMAGE_URI $IMAGE_URI:test
             docker compose up -d
             sleep 10
-            docker container logs homebridge > homebridge.log
             docker exec -t \
               netshoot \
               curl -sSf --retry 3 http://homebridge:8581 > /dev/null || exit 1
+            sleep 20
+            docker container logs homebridge > homebridge.log
             grep -E "\(Homebridge [A-Z0-9]{4}\) is running on port [0-9]{5}" homebridge.log > /dev/null
       - store_artifacts:
           path: homebridge.log
