@@ -156,11 +156,6 @@ workflows:
           requires:
             - "job-build-image"
             - "job-test-image"
-          filters: 
-            tags:
-              only: /.*/ # build all tags
-            branches:
-              ignore: /.*/ # ignore all branches
           matrix:
             parameters:
               image_tag:
