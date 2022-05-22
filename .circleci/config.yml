@@ -100,13 +100,13 @@ workflows:
   workflow-push-mainline:
     jobs:
       - job-build-image:
-          filters: 
+          filters: &workflow-push-mainline-filters
             branches:
               only: main
-      - job-test-image:
+      - job-test-image: &workflow-job-test-image
           requires:
             - "job-build-image"
-      - job-push-image:
+      - job-push-image: &workflow-job-push-image
           context: default
           requires:
             - "job-build-image"
@@ -114,15 +114,23 @@ workflows:
           matrix:
             parameters:
               image_tag:
+                - "<< pipeline.git.branch >>-<< pipeline.git.revision >>-<< pipeline.number >>"
+      - job-push-image:
+          name: job-push-tags
+          context: default
+          requires:
+            - "job-push-image"
+          matrix:
+            parameters:
+              image_tag:
                 - "latest"
                 - "<< pipeline.git.branch >>"
                 - "<< pipeline.git.branch >>-<< pipeline.git.revision >>"
-                - "<< pipeline.git.branch >>-<< pipeline.git.revision >>-<< pipeline.number >>" 
 
   workflow-push-branch:
     jobs:
       - job-build-image:
-          filters: 
+          filters: &workflow-push-branch-filters
             branches:
               ignore: main
       - job-test-image:
@@ -143,7 +151,7 @@ workflows:
   workflow-tag-release:
     jobs:
       - job-build-image:
-          filters: 
+          filters: &workflow-tag-release-filters 
             tags:
               only: /.*/ # build all tags
             branches:
@@ -151,11 +159,15 @@ workflows:
       - job-test-image:
           requires:
             - "job-build-image"
+          filters:
+            <<: *workflow-tag-release-filters
       - job-push-image:
           context: default
           requires:
             - "job-build-image"
             - "job-test-image"
+          filters:
+            <<: *workflow-tag-release-filters
           matrix:
             parameters:
               image_tag:
