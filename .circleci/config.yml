@@ -127,6 +127,9 @@ workflows:
           <<: *workflow-job-push-image-tag
           name: job-push-image-tag-custom
           image_tag: "latest"
+          requires:
+            - "job-push-image-tag"
+         
 
   workflow-push-branch:
     jobs:
@@ -165,6 +168,8 @@ workflows:
           <<: *workflow-job-push-image-tag
           name: job-push-image-tag-custom
           image_tag: "release"
+          requires:
+            - "job-push-image-tag"
           filters:
             <<: *workflow-tag-release-filters
 
@@ -187,3 +192,5 @@ workflows:
           <<: *workflow-job-push-image-tag
           name: job-push-image-tag-custom
           image_tag: "nightly"
+          requires:
+            - "job-push-image-tag"
