@@ -107,6 +107,7 @@ workflows:
           requires:
             - "job-build-image"
       - job-push-image: &workflow-job-push-image
+          name: job-push-image-tag
           context: default
           requires:
             - "job-build-image"
@@ -116,10 +117,10 @@ workflows:
               image_tag:
                 - "<< pipeline.git.branch >>-<< pipeline.git.revision >>-<< pipeline.number >>"
       - job-push-image:
-          name: job-push-tags
+          name: job-push-image-tags
           context: default
           requires:
-            - "job-push-image"
+            - "job-push-image-tag"
           matrix:
             parameters:
               image_tag:
