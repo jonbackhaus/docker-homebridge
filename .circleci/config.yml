@@ -100,23 +100,20 @@ workflows:
   workflow-push-mainline:
     jobs:
       - job-build-image:
-          filters: &workflow-push-mainline-filters
+          filters:
             branches:
               only: main
       - job-test-image: &workflow-job-test-image
           requires:
             - "job-build-image"
-      - job-push-image: &workflow-job-push-image
+      - job-push-image: &workflow-job-push-image-tag
           name: job-push-image-tag
           context: default
           requires:
             - "job-build-image"
             - "job-test-image"
-          matrix:
-            parameters:
-              image_tag:
-                - "<< pipeline.git.branch >>-<< pipeline.git.revision >>-<< pipeline.number >>"
-      - job-push-image:
+          image_tag: "<< pipeline.git.branch >>-<< pipeline.git.revision >>-<< pipeline.number >>"
+      - job-push-image: &workflow-job-push-image-tags
           name: job-push-image-tags
           context: default
           requires:
@@ -124,30 +121,25 @@ workflows:
           matrix:
             parameters:
               image_tag:
-                - "latest"
                 - "<< pipeline.git.branch >>"
                 - "<< pipeline.git.branch >>-<< pipeline.git.revision >>"
+      - job-push-image:
+          <<: *workflow-job-push-image-tag
+          name: job-push-image-tag-custom
+          image_tag: "latest"
 
   workflow-push-branch:
     jobs:
       - job-build-image:
-          filters: &workflow-push-branch-filters
+          filters: 
             branches:
               ignore: main
       - job-test-image:
-          requires:
-            - "job-build-image"
+          <<: *workflow-job-test-image
       - job-push-image:
-          context: default
-          requires:
-            - "job-build-image"
-            - "job-test-image"
-          matrix:
-            parameters:
-              image_tag:
-                - "<< pipeline.git.branch >>"
-                - "<< pipeline.git.branch >>-<< pipeline.git.revision >>"
-                - "<< pipeline.git.branch >>-<< pipeline.git.revision >>-<< pipeline.number >>"
+          <<: *workflow-job-push-image-tag
+      - job-push-image:
+          <<: *workflow-job-push-image-tags
 
   workflow-tag-release:
     jobs:
@@ -158,24 +150,23 @@ workflows:
             branches:
               ignore: /.*/ # ignore all branches
       - job-test-image:
-          requires:
-            - "job-build-image"
+          <<: *workflow-job-test-image
           filters:
             <<: *workflow-tag-release-filters
       - job-push-image:
-          context: default
-          requires:
-            - "job-build-image"
-            - "job-test-image"
+          <<: *workflow-job-push-image-tag
           filters:
             <<: *workflow-tag-release-filters
-          matrix:
-            parameters:
-              image_tag:
-                - "release"
-                - "<< pipeline.git.tag >>"
-                - "<< pipeline.git.tag >>-<< pipeline.git.revision >>"
-                - "<< pipeline.git.tag >>-<< pipeline.git.revision >>-<< pipeline.number >>"
+      - job-push-image:
+          <<: *workflow-job-push-image-tags
+          filters:
+            <<: *workflow-tag-release-filters
+      - job-push-image:
+          <<: *workflow-job-push-image-tag
+          name: job-push-image-tag-custom
+          image_tag: "release"
+          filters:
+            <<: *workflow-tag-release-filters
 
   workflow-cron-nightly:
     triggers:
@@ -187,18 +178,12 @@ workflows:
     jobs:
       - job-build-image
       - job-test-image:
-          requires:
-            - "job-build-image"
+          <<: *workflow-job-test-image
       - job-push-image:
-          context: default
-          requires:
-            - "job-build-image"
-            - "job-test-image"
-          matrix:
-            parameters:
-              image_tag:
-                - "nightly"
-                - "<< pipeline.git.branch >>"
-                - "<< pipeline.git.branch >>-<< pipeline.git.revision >>"
-                - "<< pipeline.git.branch >>-<< pipeline.git.revision >>-<< pipeline.number >>"
-
+          <<: *workflow-job-push-image-tag
+      - job-push-image:
+          <<: *workflow-job-push-image-tags
+      - job-push-image:
+          <<: *workflow-job-push-image-tag
+          name: job-push-image-tag-custom
+          image_tag: "nightly"
