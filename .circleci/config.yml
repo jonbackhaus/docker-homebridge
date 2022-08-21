@@ -2,7 +2,7 @@ version: 2.1
 executors:
   executor-docker:
     environment:
-      FROM_TAG: "2022-07-08"
+      FROM_TAG: "2022-08-09"
       ORG_NAME: jonbackhaus
       IMAGE_NAME: homebridge
     docker:
