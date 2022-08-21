@@ -158,14 +158,6 @@ workflows:
             <<: *workflow-tag-release-filters
       - job-push-image:
           <<: *workflow-job-push-image-tag
-          filters:
-            <<: *workflow-tag-release-filters
-      - job-push-image:
-          <<: *workflow-job-push-image-tags
-          filters:
-            <<: *workflow-tag-release-filters
-      - job-push-image:
-          <<: *workflow-job-push-image-tag
           name: job-push-image-tag-custom
           image_tag: "release"
           requires:
